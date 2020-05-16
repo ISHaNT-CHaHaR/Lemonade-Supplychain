@@ -6,7 +6,7 @@ contract LemonadeStand {
 
     uint256 skuCount; // Stock unit count
 
-    enum State {ForSale, Sold} // for checking state of particular product
+    enum State {ForSale, Sold, Shipped} // for checking state of particular product
 
     struct Item {
         // info of all the elements or actions
@@ -23,6 +23,8 @@ contract LemonadeStand {
     event ForSale(uint256 skuCount); //
 
     event Sold(uint256 sku); //
+
+    event Shipped(uint256 sku);
 
     modifier onlyOwner() {
         require(msg.sender == Owner, "owner not authorised!");
@@ -125,5 +127,15 @@ contract LemonadeStand {
         if (state == 1) {
             stateIs = "SOLD";
         }
+    }
+
+    function shipItem(uint256 sku)
+        public
+        sold(sku)
+        verifyCaller(items[sku].seller)
+    {
+        items[sku].state = State.Shipped;
+
+        emit Shipped(sku);
     }
 }
