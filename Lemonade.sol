@@ -85,12 +85,45 @@ contract LemonadeStand {
         address buyer = msg.sender;
         uint256 price = items[sku].price;
 
-        items[sku].buyer = buyer;// Update the buyer's address
+        items[sku].buyer = buyer; // Update the buyer's address
 
-        items[sku].state = State.Sold;// Changing the current state.
+        items[sku].state = State.Sold; // Changing the current state.
 
-        items[sku].seller.transfer(price);// Transfering price to seller.
+        items[sku].seller.transfer(price); // Transfering price to seller.
 
-        emit Sold(sku);// emitted to Watch in frontend.
+        emit Sold(sku); // emitted to Watch in frontend.
+    }
+
+    function fetchItem(uint256 _sku)
+        public
+        view
+        returns (
+            string memory name,
+            uint256 sku,
+            uint256 price,
+            string memory stateIs,
+            address seller,
+            address buyer
+        )
+    {
+        name = items[_sku].name;
+
+        sku = items[_sku].sku;
+
+        price = items[_sku].price;
+
+        seller = items[_sku].seller;
+
+        buyer = items[_sku].buyer;
+        uint256 state;
+
+        state = uint256(items[_sku].state);
+
+        if (state == 0) {
+            stateIs = "ForSale";
+        }
+        if (state == 1) {
+            stateIs = "SOLD";
+        }
     }
 }
