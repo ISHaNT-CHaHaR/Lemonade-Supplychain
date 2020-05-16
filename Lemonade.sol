@@ -14,7 +14,7 @@ contract LemonadeStand {
         uint256 sku;
         uint256 price;
         State state;
-        address seller;
+        address payable seller;
         address buyer;
     }
 
@@ -74,5 +74,23 @@ contract LemonadeStand {
             seller: msg.sender,
             buyer: address(0)
         });
+    }
+
+    function buyItem(uint256 sku)
+        public
+        payable
+        paidEnough(items[sku].price)
+        forSale(sku)
+    {
+        address buyer = msg.sender;
+        uint256 price = items[sku].price;
+
+        items[sku].buyer = buyer;// Update the buyer's address
+
+        items[sku].state = State.Sold;// Changing the current state.
+
+        items[sku].seller.transfer(price);// Transfering price to seller.
+
+        emit Sold(sku);// emitted to Watch in frontend.
     }
 }
