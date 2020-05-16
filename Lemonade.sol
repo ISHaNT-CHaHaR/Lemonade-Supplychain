@@ -15,7 +15,7 @@ contract LemonadeStand {
         uint256 price;
         State state;
         address payable seller;
-        address buyer;
+        address payable buyer;
     }
 
     mapping(uint256 => Item) items; // for storing data of drink as hashmap
@@ -57,6 +57,13 @@ contract LemonadeStand {
         _;
     }
 
+    modifier checkValue(uint256 _sku) {
+        _;
+        uint256 _price = items[_sku].price;
+        uint256 amountRefund = msg.value - _price;
+        items[_sku].buyer.transfer(amountRefund);
+    }
+
     constructor() public {
         Owner = msg.sender;
         skuCount = 0;
@@ -83,8 +90,9 @@ contract LemonadeStand {
         payable
         paidEnough(items[sku].price)
         forSale(sku)
+        checkValue(sku)
     {
-        address buyer = msg.sender;
+        address payable buyer = msg.sender;
         uint256 price = items[sku].price;
 
         items[sku].buyer = buyer; // Update the buyer's address
