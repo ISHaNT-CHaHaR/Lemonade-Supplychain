@@ -55,12 +55,24 @@ contract LemonadeStand {
         _;
     }
 
-
-    constructor() public{
+    constructor() public {
         Owner = msg.sender;
         skuCount = 0;
     }
 
+    function addItem(string memory _name, uint256 _price) public onlyOwner {
+        // Increment Sku
+        skuCount += 1;
 
+        emit ForSale(skuCount); // it immediately gets forsale option ready
 
+        items[skuCount] = Item({ // mapping unique skucount to Item struct
+            name: _name,
+            sku: skuCount,
+            price: _price,
+            state: State.ForSale,
+            seller: msg.sender,
+            buyer: address(0)
+        });
+    }
 }
