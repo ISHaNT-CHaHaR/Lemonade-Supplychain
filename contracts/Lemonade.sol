@@ -1,7 +1,6 @@
-pragma solidity >=0.4.5;
+pragma solidity >=0.6.0;
 
-
-contract LemonadeStand {
+contract Lemonade {
     address Owner; // address of owner
 
     uint256 skuCount; // Stock unit count
@@ -88,7 +87,7 @@ contract LemonadeStand {
     function buyItem(uint256 sku)
         public
         payable
-        paidEnough(items[sku].price)
+        // paidEnough(items[sku].price)
         forSale(sku)
         checkValue(sku)
     {
