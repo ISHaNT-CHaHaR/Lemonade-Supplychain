@@ -87,7 +87,7 @@ contract Lemonade {
     function buyItem(uint256 sku)
         public
         payable
-        paidEnough(items[sku].price)
+        // paidEnough(items[sku].price)
         forSale(sku)
         checkValue(sku)
     {
