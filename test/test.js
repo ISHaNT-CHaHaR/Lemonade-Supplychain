@@ -1,20 +1,32 @@
-const Lemonade = artifacts.require('Lemonade');
+const Lemonade = artifacts.require('Lemonade'); // creating artifact od contract
 
 contract('Lemonade', () => {
-   it('must pass this stuff', async () => {
-      const lemonade = await Lemonade.deployed();
-      await lemonade.addItem('LiMoN', 100);
-      const result = await lemonade.fetchItem(1);
+   let lemonade = null;
+   before('Everything', async () => {
+      lemonade = await Lemonade.deployed(); // just a JSON object will not deploy it.
+   });
 
-      assert(result.sku.toNumber() === 1);
+   it('must pass this stuff', async () => {
+      await lemonade.addItem('LiMoN', 100);
+
+      await lemonade.addItem('Juice', 150);
+      const result = await lemonade.fetchItem(1);
+      console.log(result);
+
       assert(result.name === 'LiMoN');
    });
 
    it('If item bought or not', async () => {
-      const lemonade = await Lemonade.deployed();
       await lemonade.buyItem(2);
-      const res = await lemonade.fetchItem(1);
+      const res = await lemonade.fetchItem(2);
       console.log(res);
-      assert(res.sku.toNumber() === 1);
+      assert(res.stateIs === 'SOLD');
    });
+
+   // it('If item shipped or not', async () => {
+   //    await lemonade.shipItem(2);
+   //    const product = await lemonade.fetchItem(2);
+
+   //    assert(product.stateIs === 'Shipped');
+   // });
 });
